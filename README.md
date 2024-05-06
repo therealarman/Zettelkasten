@@ -14,6 +14,7 @@ This project is heavily inspired by CyanVoxel's software, [TagStudio](https://ww
 - [ ] An attribute-value tag system as seen in TagStudio
 - [ ] Obsidian Compatability
 - [ ] A vault registration system that lets you group files into folders within the software regardless of their real locations
+- [ ] A "literature" or "resources" section to link to and preview outside works and articles
 
 ## Notes & Inspo (Temporary)
 
