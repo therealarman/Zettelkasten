@@ -7,7 +7,7 @@ This is a work in progress!
 
 The Zettlekasten project is an ongoing software project I'm developing in order to help myself stay organized among a sea of files. Right now, it's in the conceptual and early development stage, however as development continues I plan to tweak the features list below.
 
-This project is heavily inspired by CyanVoxel's software, [TagStudio](https://www.youtube.com/watch?v=wTQeMkYRMcw). However I have some of my own ideas in mind to build upon CyanVoxel's already great program.
+This project is heavily inspired by CyanVoxel's software, [TagStudio](https://github.com/TagStudioDev/TagStudio). However I have some of my own ideas in mind to build upon CyanVoxel's already great program.
 
 ## Planned Features
 
