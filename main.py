@@ -2,24 +2,20 @@ import os
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+from src.qt.zettlekasten import Zettlekasten
+import traceback
 
-directory = 'C:/Users/Arman/Downloads'
+# loc = 'C:/Users/Arman/Downloads'
 
-files = [f for f in os.listdir(directory) if os.path.isfile(os.path.join(directory, f))]
-folders = [f for f in os.listdir(directory) if not os.path.isfile(os.path.join(directory, f))]
+def main():
 
-df = pd.DataFrame(columns=['Title', 'Type'])
+    thisInstance = Zettlekasten()
 
-for _file in files:
-    splFile = os.path.splitext(_file)
+    try:
+        thisInstance.start()
+    except:
+        traceback.print_exc()
+        print("Zettlekasten Crashed!")
 
-    new_row = pd.Series({'Title' : splFile[0], 'Type': splFile[1]})
-
-    df = pd.concat([
-                df, 
-                pd.DataFrame([new_row], columns=new_row.index)]
-           ).reset_index(drop=True)
-
-print(df.head())
-
-# df.to_csv('Downloads.csv', index=False)
+if __name__ == "__main__":
+    main()

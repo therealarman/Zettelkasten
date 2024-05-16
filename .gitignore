@@ -1,4 +1,5 @@
-.zettleVenv/
+.zettelVenv/
 .vscode/
+__pycache__/
 
 Downloads.csv
