@@ -71,9 +71,9 @@ class MainWindow(QMainWindow):
         # self.gridLayout_2.setSpacing(8)
         # self.gridLayout_2.setContentsMargins(0, 0, 0, 8)
 
-        self.flowLayout = FlowLayout(self.scrollAreaWidgetContents)
-        self.flowLayout.setSpacing(8)
-        self.flowLayout.setContentsMargins(0, 0, 0, 8)
+        # self.flowLayout = FlowLayout(self.scrollAreaWidgetContents)
+        # self.flowLayout.setSpacing(8)
+        # self.flowLayout.setContentsMargins(0, 0, 0, 8)
         
         self.scrollArea.setWidget(self.scrollAreaWidgetContents)
         self.frame_layout.addWidget(self.scrollArea)
@@ -131,11 +131,11 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(self.centralWidget)
 
         # if(self.colorSections == True):
-        self.vaultSelector.setStyleSheet('background:lightgreen;')
+        # self.vaultSelector.setStyleSheet('background:lightgreen;')
         # self.scrollAreaWidgetContents.setStyleSheet('background:blue;')
         # self.mid_container.setStyleSheet('background:lightcoral;')
         # self.frame_container.setStyleSheet('background:white;')
-        self.pvTest.setStyleSheet('background:lightblue;')
+        # self.pvTest.setStyleSheet('background:lightblue;')
 
         # self.dir_search = QLineEdit(left_widget)
         # self.dir_search.setPlaceholderText("Enter a Directory")

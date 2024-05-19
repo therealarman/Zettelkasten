@@ -2,14 +2,14 @@ import os
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-from src.qt.zettlekasten import Zettlekasten
+from src.qt.zettelkasten import Zettelkasten
 import traceback
 
 # loc = 'C:/Users/Arman/Downloads'
 
 def main():
 
-    thisInstance = Zettlekasten()
+    thisInstance = Zettelkasten()
 
     try:
         thisInstance.start()

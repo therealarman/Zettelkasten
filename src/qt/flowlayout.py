@@ -4,6 +4,10 @@ import sys
 from PyQt6.QtWidgets import *
 from PyQt6.QtCore import *
 
+class FlowWidget(QWidget):
+    def __init__(self, parent=None) -> None:
+        super().__init__(parent)
+        self.ignore_size: bool = False
 
 class FlowLayout(QLayout):
 
@@ -83,6 +87,7 @@ class FlowLayout(QLayout):
                 QSizePolicy.ControlType.PushButton, QSizePolicy.ControlType.PushButton, Qt.Orientation.Vertical
             )
             space_x = spacing + layout_spacing_x
+            # space_y = spacing
             space_y = spacing + layout_spacing_y
             next_x = x + item.sizeHint().width() + space_x
             if next_x - space_x > rect.right() and line_height > 0:
@@ -103,27 +108,27 @@ class FlowLayout(QLayout):
             x = next_x
             line_height = max(line_height, item.sizeHint().height())
         
-        if(len(all_rows_list) > 0):
-            max_in_row = len(all_rows_list[0])
-            occupied_space = spacing * (max_in_row)
-            line_width = rect.right() - rect.left()
-            self.free_space = (line_width - occupied_space) / max_in_row
+        # if(len(all_rows_list) > 0):
+        #     max_in_row = len(all_rows_list[0])
+        #     occupied_space = spacing * (max_in_row)
+        #     line_width = rect.right() - rect.left()
+        #     self.free_space = (line_width - occupied_space) / max_in_row
 
-            _ctr = 1
-            _y = 0
+        #     _ctr = 1
+        #     _y = 0
 
-            for item in self._item_list:
+        #     for item in self._item_list:
 
-                if(_ctr > ((max_in_row * 2) - 1)):
-                    _ctr = 1
+        #         if(_ctr > ((max_in_row * 2) - 1)):
+        #             _ctr = 1
 
-                    _y += spacing + line_height
+        #             _y += spacing + max(line_height, item.sizeHint().height())
 
-                new_x = (((line_width / max_in_row) * 0.5) * _ctr) - (item.sizeHint().width() / 2)
-                new_pos = QPoint(round(new_x), _y)
-                # new_pos = QPoint(round(new_x), item.geometry().y())
-                item.setGeometry(QRect(new_pos, item.sizeHint()))
+        #         new_x = (((line_width / max_in_row) * 0.5) * _ctr) - (item.sizeHint().width() / 2)
+        #         new_pos = QPoint(round(new_x), _y)
+        #         # new_pos = QPoint(round(new_x), item.geometry().y())
+        #         item.setGeometry(QRect(new_pos, item.sizeHint()))
 
-                _ctr += 2
+        #         _ctr += 2
                 
         return y + line_height - rect.y()

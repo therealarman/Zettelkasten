@@ -7,9 +7,11 @@ from PyQt6.QtGui import *
 
 from src.directory import Directory
 from src.qt.main_window import MainWindow
-from src.qt.widgets.thumbnail import ThumbnailButton
+from src.qt.widgets.new_thumbnail import ThumbnailButton
+# from src.qt.widgets.thumbnail import ThumbnailButton
+from src.qt.flowlayout import FlowLayout
 
-class Zettlekasten(QObject):
+class Zettelkasten(QObject):
 
     def __init__(self):
         super().__init__()
@@ -26,6 +28,8 @@ class Zettlekasten(QObject):
         # loc = 'C:/Users/Arman/Downloads'
 
         self.MainWindow.select_action.triggered.connect(self.openFileDialog)
+
+        # print(self.MainWindow.devicePixelRatio())
 
         # thisDir = Directory(self.loc)
         # df, ls = thisDir.getFiles()
@@ -50,7 +54,10 @@ class Zettlekasten(QObject):
         if folder_path:
             self.loc = folder_path
 
-            self.clearLayout(self.MainWindow.flowLayout)
+            layout = FlowLayout()
+            layout.setSpacing(8)
+
+            # self.clearLayout(self.MainWindow.flowLayout)
 
             thisDir = Directory(self.loc)
             df, ls = thisDir.getFiles()
@@ -59,12 +66,19 @@ class Zettlekasten(QObject):
             names_list = df.apply(lambda row: [row['Title'], row['Location'], row['Type']], axis=1).tolist()
 
             for i in names_list:
+                thmb = ThumbnailButton((150, 150), i)
+                # thmb = ThumbnailButton(i, 150)
+                layout.addWidget(thmb)
+            
+            self.flow_container: QWidget = QWidget()
+            self.flow_container .setLayout(layout)
 
-                # thisImg = QPixmap(i[1])
+            layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
+            sa: QScrollArea = self.MainWindow.scrollArea
+            sa.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+            sa.setWidgetResizable(True)
+            sa.setWidget(self.flow_container)
 
-                thmb = ThumbnailButton(i, 150, self.MainWindow.flowLayout)
-
-                self.MainWindow.flowLayout.addWidget(thmb)
 
     def clearLayout(self, layout):
         while layout.count():
@@ -72,3 +86,4 @@ class Zettlekasten(QObject):
             widget = item.widget()
             if widget:
                 widget.deleteLater()
+

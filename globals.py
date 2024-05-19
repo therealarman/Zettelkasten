@@ -22,7 +22,7 @@ IMAGES: list[str] = [
 
 # ]
 
-# PLAINTEXT: list[str] = [
-
-
-# ]
+PLAINTEXT: list[str] = [
+    "txt",
+    "md",
+]

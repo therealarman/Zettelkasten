@@ -7,6 +7,8 @@ from src.qt.main_window import MainWindow
 from src.qt.flowlayout import FlowLayout
 import random
 import globals
+from src.qt.widgets.thumb_renderer import ThumbnailRenderer
+from utils import wrap_text
 
 class ThumbnailButton(QWidget):
 
@@ -24,24 +26,25 @@ class ThumbnailButton(QWidget):
     )
 
     # def __init__(self, title: str, _s: int, image: QPixmap, flowLayout: FlowLayout):
-    def __init__(self, fileInfo, _s: int, flowLayout: FlowLayout):
+    def __init__(self, fileInfo, _s: int):
         super().__init__()
 
         # self.title = self.adjustTitleLength(title)
         self.title, self.location, self.extension = self.fileParse(fileInfo)
+        # self.extension = self.extension.upper()
         # self._s = _s
         # self.image = image
-        self.flowLayout = flowLayout
-
         self.setup_ui()
 
     def setup_ui(self):
 
+        # self.setMaximumSize(150, 215)
+        # self.setMinimumSize(150, 215)
+
+        self.setFixedSize(150, 215)
+
         self.layout = QVBoxLayout(self)
         self.layout.setContentsMargins(0, 0, 0, 0)
-
-        self.frame = QFrame(self)
-        self.layout.addWidget(self.frame)
 
         self.thumbnail_button = QPushButton()
         self.layout.addWidget(self.thumbnail_button)
@@ -61,45 +64,23 @@ class ThumbnailButton(QWidget):
 
         self.title_label = QLabel()
         self.layout.addWidget(self.title_label)
-        self.title_label.setMinimumSize(150, 15)
-        self.title_label.setMaximumSize(150, 30)
+        self.title_label.setMinimumSize(150, 35)
+        self.title_label.setMaximumSize(150, 35)
         self.title_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.title_label.setWordWrap(True)
 
-        self.title_label.setText(self.title)
+        self.wrappedTitle = wrap_text(self.title, max_lines=2)
+        self.title_label.setText(self.wrappedTitle)
+        
+        # if (self.extension).lower() in globals.IMAGES:
+            # self.thumbnail_button.setStyleSheet("background:lightcoral;")
+        self.thumbnail_button.setStyleSheet("background:lightcoral;")
+        
+        self.renderer = ThumbnailRenderer()
 
-        if (self.extension).lower() in globals.IMAGES:
-            self.thumbnail_button.setStyleSheet("background:lightcoral;")
+        thmbImg = self.renderer.render(self.location, self.extension, 120)
 
-        # size = QSize(self._s, self._s)
-
-        # ico_size = self.maximizeIcon(self.image, self._s)
-
-        # self.thumbnail_button.setIcon(QIcon(self.image))
-        # self.thumbnail_button.setIconSize(ico_size)
-
-    def maximizeIcon(self, pixmap: QPixmap, max_size: int):
-        original_width = pixmap.width()
-        original_height = pixmap.height()
-
-        aspect_ratio = original_width / original_height
-
-        if original_width > original_height:
-            new_width = max_size
-            new_height = int(new_width / aspect_ratio)
-        else:
-            new_height = max_size
-            new_width = int(new_height * aspect_ratio)
-
-        return QSize(new_width, new_height)
-    
-    def adjustTitleLength(self, title: str):
-
-        max_len = 10
-
-        truncated = title[:max_len] + "..." if (len(title) > max_len) else title
-
-        return truncated
+        self.thumbnail_button.setIcon(QIcon(thmbImg))
+        self.thumbnail_button.setIconSize(QSize(120, 120))
 
     def fileParse(self, fileInfo):
         title = fileInfo[0]
