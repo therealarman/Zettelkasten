@@ -10,77 +10,89 @@ import globals
 from src.qt.widgets.thumb_renderer import ThumbnailRenderer
 from utils import wrap_text
 
-class ThumbnailButton(QWidget):
+from src.qt.flowlayout import FlowWidget
+
+class ThumbnailButton(FlowWidget):
 
     small_text_style = (
-        # f"background-color:rgba(0, 0, 0, 192);"
-        f"background-color:rgba(20, 139, 228, 192);"
+        f"background-color:rgba(0, 0, 0, 192);"
         f"font-family:Oxanium;"
         f"font-weight:bold;"
         f"font-size:12px;"
         f"border-radius:3px;"
-        f"padding-top: 2px;"
+        f"padding-top: 1px;"
         f"padding-right: 1px;"
-        # f"padding-bottom: 1px;"
+        f"padding-bottom: 1px;"
         f"padding-left: 1px;"
     )
 
-    # def __init__(self, title: str, _s: int, image: QPixmap, flowLayout: FlowLayout):
-    def __init__(self, fileInfo, _s: int):
+    def __init__(self, thumb_size: tuple[int, int], fileInfo):
+        
         super().__init__()
 
-        # self.title = self.adjustTitleLength(title)
+        self.thumb_size: tuple[int, int] = thumb_size
         self.title, self.location, self.extension = self.fileParse(fileInfo)
-        # self.extension = self.extension.upper()
-        # self._s = _s
-        # self.image = image
-        self.setup_ui()
+        # self.setMaximumSize(QSize(*thumb_size))
+        # self.setMinimumSize(QSize(*thumb_size))
 
-    def setup_ui(self):
+        self.base_layout = QVBoxLayout(self)
+        self.base_layout.setContentsMargins(0, 0, 0, 0)
 
-        # self.setMaximumSize(150, 215)
-        # self.setMinimumSize(150, 215)
+        self.thumb_button = QPushButton()
+        self.thumb_button.setMaximumSize(QSize(*thumb_size))
+        self.thumb_button.setMinimumSize(QSize(*thumb_size))
+        self.thumb_button.setFlat(True)
+        self.base_layout.addWidget(self.thumb_button)
 
-        self.setFixedSize(150, 215)
+        self.button_layout = QVBoxLayout()
+        self.button_layout.setContentsMargins(0, 0, 0, 0)
+        self.thumb_button.setLayout(self.button_layout)
 
-        self.layout = QVBoxLayout(self)
-        self.layout.setContentsMargins(0, 0, 0, 0)
+        self.renderer = ThumbnailRenderer()
 
-        self.thumbnail_button = QPushButton()
-        self.layout.addWidget(self.thumbnail_button)
-        self.thumbnail_button.setMinimumSize(150, 150)
-        self.thumbnail_button.setMaximumSize(150, 150)
-        self.thumbnail_button.setContextMenuPolicy(Qt.ContextMenuPolicy.ActionsContextMenu)
-        self.thumbnail_button.setFlat(False)
+        thmbImg = self.renderer.render(self.location, self.extension, 150)
 
-        self.extension_label = QLabel()
-        self.layout.addWidget(self.extension_label)
-        self.extension_label.setStyleSheet(self.small_text_style)
-        self.extension_label.setAlignment(Qt.AlignmentFlag.AlignHCenter)
-        self.extension_label.setMaximumSize(35, 18)
-        self.extension_label.setMinimumSize(5, 18)
-        self.extension_label.setText(str(self.extension).upper())
-        self.extension_label.adjustSize()
+        self.thumb_button.setIcon(QIcon(thmbImg))
+        self.thumb_button.setIconSize(QSize(*thumb_size))
+
+        self.top_layout = QHBoxLayout()
+        self.top_layout.setContentsMargins(6, 6, 6, 6)
+        self.top_container = QWidget()
+        self.top_container.setLayout(self.top_layout)
+        self.button_layout.addWidget(self.top_container)
+
+        self.button_layout.addStretch(2)
+
+        self.bottom_layout = QHBoxLayout()
+        self.bottom_layout.setContentsMargins(6, 6, 6, 6)
+        self.bottom_container = QWidget()
+        self.bottom_container.setLayout(self.bottom_layout)
+        self.button_layout.addWidget(self.bottom_container)
+
+        self.ext_badge = QLabel()
+        self.ext_badge.setStyleSheet(ThumbnailButton.small_text_style)
+        self.ext_badge.setText(str(self.extension).upper())
+        self.bottom_layout.addWidget(self.ext_badge)
+
+        self.bottom_layout.addStretch(2)
+
+        # self.count_badge = QLabel()
+        # self.count_badge.setObjectName("countBadge")
+        # self.count_badge.setText("-:--")
+        # self.count_badge.setStyleSheet(ThumbnailButton.small_text_style)
+        # self.bottom_layout.addWidget(
+        #     self.count_badge, alignment=Qt.AlignmentFlag.AlignBottom
+        # )
 
         self.title_label = QLabel()
-        self.layout.addWidget(self.title_label)
-        self.title_label.setMinimumSize(150, 35)
-        self.title_label.setMaximumSize(150, 35)
-        self.title_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.title_label.setMinimumSize(150, 50)
+        self.title_label.setMaximumSize(150, 50)
+        self.base_layout.addWidget(self.title_label)
 
         self.wrappedTitle = wrap_text(self.title, max_lines=2)
         self.title_label.setText(self.wrappedTitle)
         
-        # if (self.extension).lower() in globals.IMAGES:
-            # self.thumbnail_button.setStyleSheet("background:lightcoral;")
-        self.thumbnail_button.setStyleSheet("background:lightcoral;")
-        
-        self.renderer = ThumbnailRenderer()
-
-        thmbImg = self.renderer.render(self.location, self.extension, 120)
-
-        self.thumbnail_button.setIcon(QIcon(thmbImg))
-        self.thumbnail_button.setIconSize(QSize(120, 120))
+        self.title_label.setAlignment(Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignHCenter)
 
     def fileParse(self, fileInfo):
         title = fileInfo[0]
@@ -88,4 +100,3 @@ class ThumbnailButton(QWidget):
         extension = fileInfo[2]
 
         return [title, location, extension]
-

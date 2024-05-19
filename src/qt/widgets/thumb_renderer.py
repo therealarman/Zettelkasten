@@ -7,6 +7,7 @@ from src.qt.main_window import MainWindow
 from src.qt.flowlayout import FlowLayout
 import random
 import globals
+import traceback
 
 from PIL import (
     Image,
@@ -35,6 +36,8 @@ class ThumbnailRenderer(QObject):
         try:
             if(extension in globals.IMAGES):
                 image = Image.open(path)
+
+                print(path)
 
                 if image.mode == "RGBA":
                     # logging.info(image.getchannel(3).tobytes())
@@ -69,10 +72,12 @@ class ThumbnailRenderer(QObject):
                 _image.setDevicePixelRatio(3)
 
             else:
-                _image = QPixmap("images/No_image_available.png")
+                _image = QPixmap()
+                # _image = QPixmap("images/No_image_available.png")
         except:
             _image = QPixmap()
-            print("Failed.")
+            # print(f"{path} failed to render.")
+            traceback.print_exc()
         
         return _image
 

@@ -6,6 +6,9 @@ from PyQt6.QtGui import *
 """ VERSION NUMBER """
 VERSION_NUMBER: str = '1.0.0' # Major | Minor | Patch
 
+""" LIBRARY FOLDER NAME """
+ZETTLE_FOLDER: str = '.Zettelkasten'
+
 IMAGES: list[str] = [
     "png",
     "jpeg",

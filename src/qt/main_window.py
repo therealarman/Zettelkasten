@@ -160,7 +160,7 @@ class MainWindow(QMainWindow):
 
     #     self.fileShow.setText(str(df.head(10)))
 
-        self.setMenu()
+        # self.setMenu()
 
     def setMenu(self):
         menu = self.menuBar()
