@@ -103,16 +103,16 @@ class MainWindow(QMainWindow):
         self.mid_layout.addLayout(self.horizontalLayout_2, 3, 0, 1, 1)
         self.mid_layout.addWidget(self.frame_container, 5, 0, 1, 1)
         
-        self.pvTest = QWidget()
-        self.pvTest.setGeometry(QRect(0, 0, 300, 590))
+        self.preview_container = QWidget()
+        self.preview_container.setGeometry(QRect(0, 0, 300, 590))
         # self.pvTest.setStyleSheet('background:lightblue')
-        self.pvTestLayout = QHBoxLayout(self.pvTest)
+        self.preview_layout = QHBoxLayout(self.preview_container)
 
         self.horizontalLayout.addWidget(self.splitter)
 
         self.splitter.addWidget(self.vaultSelector)
         self.splitter.addWidget(self.mid_container)
-        self.splitter.addWidget(self.pvTest)
+        self.splitter.addWidget(self.preview_container)
         
         self.splitter.setStretchFactor(0, 1)
         self.splitter.setStretchFactor(1, 2)
@@ -124,7 +124,7 @@ class MainWindow(QMainWindow):
 
         self.vaultSelector.setMinimumSize(213, 100)  
         self.mid_container.setMinimumSize(450, 100)
-        self.pvTest.setMinimumSize(213, 100) 
+        self.preview_container.setMinimumSize(213, 100) 
 
         self.gridLayout.addLayout(self.horizontalLayout, 10, 0, 1, 1)
 

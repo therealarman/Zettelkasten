@@ -37,8 +37,6 @@ class ThumbnailRenderer(QObject):
             if(extension in globals.IMAGES):
                 image = Image.open(path)
 
-                print(path)
-
                 if image.mode == "RGBA":
                     # logging.info(image.getchannel(3).tobytes())
                     new_bg = Image.new("RGB", image.size, color="#1e1e1e")

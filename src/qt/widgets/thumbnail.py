@@ -2,15 +2,14 @@ import PyQt6
 from PyQt6.QtWidgets import *
 from PyQt6.QtCore import *
 from PyQt6.QtGui import *
+
 from src.directory import Directory
 from src.qt.main_window import MainWindow
-from src.qt.flowlayout import FlowLayout
-import random
-import globals
+from src.qt.flowlayout import FlowWidget
 from src.qt.widgets.thumb_renderer import ThumbnailRenderer
 from utils import wrap_text
 
-from src.qt.flowlayout import FlowWidget
+import typing
 
 class ThumbnailButton(FlowWidget):
 
@@ -26,12 +25,14 @@ class ThumbnailButton(FlowWidget):
         f"padding-left: 1px;"
     )
 
-    def __init__(self, thumb_size: tuple[int, int], fileInfo):
+    def __init__(self, thumb_size: tuple[int, int], fileInfo, index):
         
         super().__init__()
 
         self.thumb_size: tuple[int, int] = thumb_size
         self.title, self.location, self.extension = self.fileParse(fileInfo)
+        self.index = index
+        # print(index)
         # self.setMaximumSize(QSize(*thumb_size))
         # self.setMinimumSize(QSize(*thumb_size))
 
@@ -63,6 +64,8 @@ class ThumbnailButton(FlowWidget):
 
         self.button_layout.addStretch(2)
 
+        # self.reassign_button_click(button=self.thumb_button, new_action=self.print_index())
+
         self.bottom_layout = QHBoxLayout()
         self.bottom_layout.setContentsMargins(6, 6, 6, 6)
         self.bottom_container = QWidget()
@@ -75,14 +78,6 @@ class ThumbnailButton(FlowWidget):
         self.bottom_layout.addWidget(self.ext_badge)
 
         self.bottom_layout.addStretch(2)
-
-        # self.count_badge = QLabel()
-        # self.count_badge.setObjectName("countBadge")
-        # self.count_badge.setText("-:--")
-        # self.count_badge.setStyleSheet(ThumbnailButton.small_text_style)
-        # self.bottom_layout.addWidget(
-        #     self.count_badge, alignment=Qt.AlignmentFlag.AlignBottom
-        # )
 
         self.title_label = QLabel()
         self.title_label.setMinimumSize(150, 50)
@@ -100,3 +95,18 @@ class ThumbnailButton(FlowWidget):
         extension = fileInfo[2]
 
         return [title, location, extension]
+    
+    def reassign_button_click(self, button: QPushButton, new_action):
+
+        try:
+            # Disconnect all previous connections to the clicked signal
+            self.thumb_button.clicked.disconnect()
+        except TypeError:
+            # This will be raised if there were no connections before
+            pass
+        
+        # Connect the new action
+        self.thumb_button.clicked.connect(new_action)
+
+    # def print_index(self):
+    #     print(self.index)
