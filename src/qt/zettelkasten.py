@@ -29,8 +29,6 @@ class Zettelkasten(QObject):
         self.thumbnails: list[ThumbnailButton] = []
         self.selected = []
 
-        # self.loc = 'C:/Users/Arman/Downloads'
-
         menu = self.MainWindow.menuBar()
         self.file_menu = menu.addMenu("&File")
         self.edit_menu = menu.addMenu("&Edit")
@@ -53,11 +51,8 @@ class Zettelkasten(QObject):
         self.reload_action.triggered.connect(self.refresh_library)
         self.file_menu.addAction(self.reload_action)
 
-        self.preview_item = PreviewWidget((300, 300))
-
-        self.MainWindow.preview_layout.addWidget(self.preview_item)
-
-        print(self.MainWindow.preview_container.size())
+        self.preview_panel = PreviewWidget((280, 280), main_driver=self)
+        self.MainWindow.preview_layout.addWidget(self.preview_panel)
 
         self.MainWindow.show()
 
@@ -102,7 +97,7 @@ class Zettelkasten(QObject):
     def init_thumbnail_grid(self, entries, layout):
 
         self.flow_container: QWidget = QWidget()
-        self.flow_container .setLayout(layout)
+        self.flow_container.setLayout(layout)
 
         self.thumbnails.clear()
 
@@ -118,7 +113,6 @@ class Zettelkasten(QObject):
         sa.setWidget(self.flow_container)
 
         for i in self.thumbnails:
-            print(f"{type(i)} {type(i.index)}")
 
             i.reassign_button_click(
                 button=i.thumb_button, 
@@ -137,7 +131,14 @@ class Zettelkasten(QObject):
 
         if self.lib.current_dir:
             self.lib.populate_library()
-            self.init_thumbnail_grid()
+
+            df = self.lib.dataframe
+            names_list = df.apply(lambda row: [row['Title'], row['Location'], row['Type']], axis=1).tolist()
+
+            layout = FlowLayout()
+            layout.setSpacing(8)
+
+            self.init_thumbnail_grid(names_list, layout)
 
     def shutdown(self):
         """Save Library on Application Exit"""
@@ -151,13 +152,15 @@ class Zettelkasten(QObject):
         if id not in self.selected:
             self.selected.clear()
             self.selected.append(id)
-            print(f"Selected {id}")
+            # print(f"Selected {id}")
             # for it in self.item_thumbs:
                 # if it.mode == type and it.item_id == id:
                     # it.thumb_button.set_selected(True)
         else:
             self.selected.remove(id)
-            print(f"Deselected {id}")
+            # print(f"Deselected {id}")
             # for it in self.item_thumbs:
                 # if it.mode == type and it.item_id == id:
                     # it.thumb_button.set_selected(False)
+
+        self.preview_panel.update_widget()

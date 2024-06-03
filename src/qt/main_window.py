@@ -24,10 +24,8 @@ class MainWindow(QMainWindow):
 
     def setup_UI(self):
         self.setWindowTitle(f'Zettlekasten {VERSION_NUMBER}')
-        self.setMinimumSize(QSize(900, 506))
-        self.resize(1300, 720)
-
-        # self.colorSections = colorSections
+        self.setMinimumSize(QSize(1300, 720))
+        self.resize(1300, 920)
 
         self.centralWidget = QWidget(self)
 
@@ -39,18 +37,15 @@ class MainWindow(QMainWindow):
         self.splitter.setHandleWidth(12)
 
         self.vaultSelector = QWidget()
-        self.vaultSelector.setGeometry(QRect(0, 0, 300, 590))
-        # self.vaultSelector.setStyleSheet('background:lightgreen')
+        self.vaultSelector.setGeometry(QRect(0, 0, 300, 720))
         self.vaultSelectorLayout = QHBoxLayout(self.vaultSelector)
 
         self.mid_container = QWidget()
-        # self.mid_container.setStyleSheet('background:lightcoral;')
         self.mid_layout = QGridLayout(self.mid_container)
         self.mid_layout.setContentsMargins(10, 10, 10, 10)
         self.mid_layout.setSpacing(10)
 
         self.frame_container = QWidget()
-        # self.frame_container.setStyleSheet('background:white;')
         self.frame_layout = QVBoxLayout(self.frame_container)
         self.frame_layout.setSpacing(0)
 
@@ -65,15 +60,7 @@ class MainWindow(QMainWindow):
         self.scrollArea.setWidgetResizable(True)
         
         self.scrollAreaWidgetContents = QWidget()
-        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 1260, 590))
-
-        # self.gridLayout_2 = QGridLayout(self.scrollAreaWidgetContents)
-        # self.gridLayout_2.setSpacing(8)
-        # self.gridLayout_2.setContentsMargins(0, 0, 0, 8)
-
-        # self.flowLayout = FlowLayout(self.scrollAreaWidgetContents)
-        # self.flowLayout.setSpacing(8)
-        # self.flowLayout.setContentsMargins(0, 0, 0, 8)
+        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 676, 720))
         
         self.scrollArea.setWidget(self.scrollAreaWidgetContents)
         self.frame_layout.addWidget(self.scrollArea)
@@ -104,9 +91,10 @@ class MainWindow(QMainWindow):
         self.mid_layout.addWidget(self.frame_container, 5, 0, 1, 1)
         
         self.preview_container = QWidget()
-        self.preview_container.setGeometry(QRect(0, 0, 300, 590))
-        # self.pvTest.setStyleSheet('background:lightblue')
+        # self.preview_container.setGeometry(QRect(0, 0, 290, 720))
         self.preview_layout = QHBoxLayout(self.preview_container)
+        self.preview_layout.setSpacing(0)
+        self.preview_layout.setContentsMargins(0, 0, 0, 0)
 
         self.horizontalLayout.addWidget(self.splitter)
 
@@ -122,45 +110,19 @@ class MainWindow(QMainWindow):
         self.splitter.setCollapsible(1, False)
         self.splitter.setCollapsible(2, False)
 
-        self.vaultSelector.setMinimumSize(213, 100)  
-        self.mid_container.setMinimumSize(450, 100)
-        self.preview_container.setMinimumSize(213, 100) 
+        self.vaultSelector.setMinimumSize(300, 100)  
+        self.mid_container.setMinimumSize(676, 100)
+        self.preview_container.setMinimumSize(300, 100) 
 
         self.gridLayout.addLayout(self.horizontalLayout, 10, 0, 1, 1)
 
         self.setCentralWidget(self.centralWidget)
 
-        # if(self.colorSections == True):
         # self.vaultSelector.setStyleSheet('background:lightgreen;')
         # self.scrollAreaWidgetContents.setStyleSheet('background:blue;')
         # self.mid_container.setStyleSheet('background:lightcoral;')
         # self.frame_container.setStyleSheet('background:white;')
-        # self.pvTest.setStyleSheet('background:lightblue;')
-
-        # self.dir_search = QLineEdit(left_widget)
-        # self.dir_search.setPlaceholderText("Enter a Directory")
-        # self.dir_search.setMinimumSize(QSize(32, 32))
-        # self.dir_search.setMaximumSize(QSize(200, 16777215))
-        # left_layout.addWidget(self.dir_search)
-
-        # self.dir_button = QPushButton("Search", left_widget)
-        # self.dir_button.clicked.connect(self.on_search_clicked)
-        # self.dir_button.setMinimumSize(QSize(32, 32))
-        # self.dir_button.setMaximumSize(QSize(200, 16777215))
-        # left_layout.addWidget(self.dir_button)
-
-        # self.fileShow = QLabel("...", middle_widget)
-        # middle_layout.addWidget(self.fileShow)
-
-    # def on_search_clicked(self):
-    #     loc_string = self.dir_search.text().replace(os.sep, '/')
-    #     thisDir = Directory(loc_string)
-
-    #     df, ls = thisDir.getFiles()
-
-    #     self.fileShow.setText(str(df.head(10)))
-
-        # self.setMenu()
+        # self.preview_container.setStyleSheet('background:lightblue;')
 
     def setMenu(self):
         menu = self.menuBar()

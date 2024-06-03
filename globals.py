@@ -13,6 +13,9 @@ IMAGES: list[str] = [
     "png",
     "jpeg",
     "jpg",
+    "gif",
+    "webp",
+    "psd",
 ]
 
 # VIDEOS: list[str] = [
@@ -28,4 +31,14 @@ IMAGES: list[str] = [
 PLAINTEXT: list[str] = [
     "txt",
     "md",
+]
+
+MODELS: list[str] = [
+    "obj",
+    "stl",
+]
+
+MUSIC: list[str] = [
+    "flp",
+    "mp3",
 ]

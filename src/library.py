@@ -41,6 +41,12 @@ class Library():
     def save_library(self):
 
         self.dataframe.to_csv(f"{self.current_dir}/{ZETTLE_FOLDER}/zk_library.csv", encoding='utf-8')
+
+        # if os.path.exists(f"{self.current_dir}/{ZETTLE_FOLDER}/zk_library.csv"):
+        #     self.dataframe.to_csv(f"{self.current_dir}/{ZETTLE_FOLDER}/zk_library.csv", encoding='utf-8')
+        # else:
+        #     print("Save location has been obstructed")
+        #     # TODO: Prompt user to give new save location
     
     def open_library(self, path):
 
@@ -59,6 +65,8 @@ class Library():
         return 2
     
     def populate_library(self):
+
+        self.dataframe: pd.DataFrame = pd.DataFrame(columns=['Title', 'Type', 'Directory', 'Location', 'ID', 'Tags'])
 
         files = [f for f in os.listdir(self.current_dir) if os.path.isfile(os.path.join(self.current_dir, f))]
         folders = [f for f in os.listdir(self.current_dir) if not os.path.isfile(os.path.join(self.current_dir, f))]

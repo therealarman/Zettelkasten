@@ -2,12 +2,10 @@ import PyQt6
 from PyQt6.QtWidgets import *
 from PyQt6.QtCore import *
 from PyQt6.QtGui import *
-from src.directory import Directory
-from src.qt.main_window import MainWindow
-from src.qt.flowlayout import FlowLayout
-import random
-import globals
+
+import numpy as np
 import traceback
+import math
 
 from PIL import (
     Image,
@@ -21,7 +19,13 @@ from PIL import (
     ImageFile,
 )
 
-import math
+import trimesh
+import pyrender
+
+from src.directory import Directory
+from src.qt.main_window import MainWindow
+from src.qt.flowlayout import FlowLayout
+import globals
 
 class ThumbnailRenderer(QObject):
 
@@ -34,7 +38,7 @@ class ThumbnailRenderer(QObject):
         adj_size = 1
 
         try:
-            if(extension in globals.IMAGES):
+            if(extension.lower() in globals.IMAGES):
                 image = Image.open(path)
 
                 if image.mode == "RGBA":
@@ -69,12 +73,27 @@ class ThumbnailRenderer(QObject):
                 _image = QPixmap.fromImage(qim)
                 _image.setDevicePixelRatio(3)
 
+            elif(extension.lower() in globals.MODELS):
+
+                _image = QPixmap()
+            
+            # elif(extension.lower() in globals.MUSIC):
+                
+            #     image = Image.open("images/FLStudio_Icon.png")
+
+            #     qim = ImageQt.ImageQt(image)
+
+            #     if image:
+            #         image.close()
+
+            #     _image = QPixmap.fromImage(qim)
+
             else:
                 _image = QPixmap()
                 # _image = QPixmap("images/No_image_available.png")
         except:
             _image = QPixmap()
-            # print(f"{path} failed to render.")
+            print(f"{path} failed to render.")
             traceback.print_exc()
         
         return _image

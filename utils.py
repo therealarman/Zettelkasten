@@ -6,7 +6,7 @@ import matplotlib
 import numpy as np
 import pandas as pd
 
-def wrap_text(text, width=15, max_lines=4):
+def wrap_text(text, width=15, max_lines=4, truncate=True):
     def wrap_word(word, width):
         # Wrap a single word if it's longer than the width
         return [word[i:i+width] for i in range(0, len(word), width)]
@@ -55,7 +55,9 @@ def wrap_text(text, width=15, max_lines=4):
     result = "\n".join(wrapped_lines)
 
     # If the text is truncated, add an ellipsis
-    if len(wrapped_lines) == max_lines and len(current_line) + len(word) + 1 > width:
-        result = result.rstrip() + "..."
+    if truncate == True:
+        if len(wrapped_lines) == max_lines and len(wrapped_lines[-1]) + 4 > width:
+        # if len(wrapped_lines) == max_lines and len(current_line) + len(word) + 4 > width:
+            result = result.rstrip()[:-3] + "..."
 
     return result
