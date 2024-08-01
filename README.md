@@ -1,7 +1,7 @@
 # The Zettlekasten Project - A solution to managing files, projects, field notes, and more!
 
 
-## Hello! こんにちは！ 👋
+## Hello! Guten Tag！ 👋
 
 This is a work in progress!
 
