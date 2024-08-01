@@ -7,7 +7,7 @@ from src.directory import Directory
 from src.qt.main_window import MainWindow
 from src.qt.flowlayout import FlowWidget
 from src.qt.widgets.thumb_renderer import ThumbnailRenderer
-from utils import wrap_text
+from utils import new_wrap_text
 
 import typing
 
@@ -84,7 +84,10 @@ class ThumbnailButton(FlowWidget):
         self.title_label.setMaximumSize(150, 50)
         self.base_layout.addWidget(self.title_label)
 
-        self.wrappedTitle = wrap_text(self.title, max_lines=2)
+        # self.title_label.setStyleSheet('background:lightcoral;')
+
+        self.wrappedTitle = new_wrap_text(self.title, self.title_label.fontMetrics(), 150, True, 2)
+        # self.wrappedTitle = wrap_text(self.title, max_lines=2)
         self.title_label.setText(self.wrappedTitle)
         
         self.title_label.setAlignment(Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignHCenter)

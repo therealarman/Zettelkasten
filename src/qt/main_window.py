@@ -112,7 +112,9 @@ class MainWindow(QMainWindow):
 
         self.vaultSelector.setMinimumSize(300, 100)  
         self.mid_container.setMinimumSize(676, 100)
-        self.preview_container.setMinimumSize(300, 100) 
+        self.preview_container.setMinimumSize(300, 100)
+
+        self.preview_container.setMaximumWidth(500)
 
         self.gridLayout.addLayout(self.horizontalLayout, 10, 0, 1, 1)
 

@@ -82,6 +82,9 @@ class Zettelkasten(QObject):
         if self.lib.current_dir:
             self.lib.save_library()
             self.lib.clear_variables()
+            self.selected.clear()
+
+            self.preview_panel.update_widget()
         
         return_code = self.lib.open_library(path)
 

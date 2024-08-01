@@ -61,3 +61,38 @@ def wrap_text(text, width=15, max_lines=4, truncate=True):
             result = result.rstrip()[:-3] + "..."
 
     return result
+
+def new_wrap_text(text: str, FontMetrics: QFontMetrics, MaxLength: int, wrap: bool = False, maxLines: int = 2):
+
+    truncated_text = ""
+
+    ls = 0 # Line Start
+
+    all_lines = []
+
+    if(FontMetrics.horizontalAdvance(text) > MaxLength - 20):
+
+        for i in range(len(text)):
+            if min(FontMetrics.horizontalAdvance(text[ls:i+1]), FontMetrics.boundingRect(text[ls:i+1]).width()) < MaxLength - 20:
+                truncated_text = truncated_text + text[i]
+
+            elif wrap and len(all_lines) < maxLines-1:
+                ls = i
+                all_lines.append(truncated_text)
+                truncated_text = text[i]
+        
+        all_lines.append(truncated_text)
+
+        if wrap:
+            if sum(len(x) for x in all_lines) < len(text):
+                all_lines[-1] = all_lines[-1][:-3] + "..."
+
+            # all_lines[-1] = new_wrap_text(all_lines[-1], FontMetrics, MaxLength, False)
+
+        return truncated_text[:-3] + "..." if not wrap else "\n".join(all_lines)
+    else:
+
+        if FontMetrics.horizontalAdvance(truncated_text) < MaxLength - 20:
+            return text
+        else:
+            return text[:-3] + "..."

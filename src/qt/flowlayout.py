@@ -130,5 +130,5 @@ class FlowLayout(QLayout):
         #         item.setGeometry(QRect(new_pos, item.sizeHint()))
 
         #         _ctr += 2
-                
+            
         return y + line_height - rect.y()
