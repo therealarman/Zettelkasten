@@ -51,10 +51,15 @@ class ThumbnailButton(FlowWidget):
 
         self.renderer = ThumbnailRenderer()
 
-        thmbImg = self.renderer.render(self.location, self.extension, 150)
+        self.renderer.updated.connect(
+            lambda i: (
+                self.update_thumbnail(img=i)
+            )
+        )
 
-        self.thumb_button.setIcon(QIcon(thmbImg))
-        self.thumb_button.setIconSize(QSize(*thumb_size))
+        # thmbImg = self.renderer.render(self.location, self.extension, 150)
+        # self.thumb_button.setIcon(QIcon(thmbImg))
+        # self.thumb_button.setIconSize(QSize(*thumb_size))
 
         self.top_layout = QHBoxLayout()
         self.top_layout.setContentsMargins(6, 6, 6, 6)
@@ -113,3 +118,8 @@ class ThumbnailButton(FlowWidget):
 
     # def print_index(self):
     #     print(self.index)
+
+    def update_thumbnail(self, img):
+        # thmbImg = self.renderer.render(self.location, self.extension, 150)
+        self.thumb_button.setIcon(QIcon(img))
+        self.thumb_button.setIconSize(QSize(*self.thumb_size))

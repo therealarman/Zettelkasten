@@ -19,15 +19,14 @@ from PIL import (
     ImageFile,
 )
 
-import trimesh
-import pyrender
-
 from src.directory import Directory
 from src.qt.main_window import MainWindow
 from src.qt.flowlayout import FlowLayout
 import globals
 
 class ThumbnailRenderer(QObject):
+
+    updated = pyqtSignal(QPixmap)
 
     def __init__(self):
         super().__init__()
@@ -96,5 +95,5 @@ class ThumbnailRenderer(QObject):
             print(f"{path} failed to render.")
             traceback.print_exc()
         
-        return _image
-
+        # return _image
+        self.updated.emit(_image)

@@ -21,7 +21,14 @@ class PreviewWidget(QWidget):
         self.thumb_size: tuple[int, int] = thumb_size
         self.driver = main_driver
         self.image_ratio: float = 1.0
+
         self.renderer = ThumbnailRenderer()
+
+        self.renderer.updated.connect(
+            lambda i: (
+                self.update_thumbnail(img=i)
+            )
+        )
 
         root_layout = QVBoxLayout(self)
         root_layout.setContentsMargins(0, 0, 0, 0)
@@ -96,20 +103,14 @@ class PreviewWidget(QWidget):
 
             title, location, ext = self.driver.lib.dataframe.loc[self.selected, ["Title", "Location", "Type"]]
 
-            selected_img = self.renderer.render(location, ext, 500)
+            self.renderer.render(location, ext, 500)
 
-            self.preview_img.setIcon(QIcon(selected_img))
 
-            pixelWidth = (len(title) + 1) * self.t_font_metric.averageCharWidth()
-
-            # print(self.t_font_metric.boundingRect(title).width())
-            # print(self.t_font_metric.horizontalAdvance(title))
+            # selected_img = self.renderer.render(location, ext, 500)
+            # self.preview_img.setIcon(QIcon(selected_img))
 
             self.title_label.setText(new_wrap_text(title, self.t_font_metric, adj_container_width))
             self.dir_label.setText(new_wrap_text(location, self.d_font_metric, adj_container_width, True))
-
-            # self.title_label.setText(wrap_text(title, 17, max_lines=2))
-            # self.dir_label.setText(wrap_text(location, width=43, max_lines=4))
 
         else:
             self.selected = None
@@ -180,3 +181,6 @@ class PreviewWidget(QWidget):
         self.preview_img.setIconSize(adj_size)
 
         # print(f"Width: {adj_width}")
+
+    def update_thumbnail(self, img):
+        self.preview_img.setIcon(QIcon(img))

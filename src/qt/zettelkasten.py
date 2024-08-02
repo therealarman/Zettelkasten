@@ -1,4 +1,7 @@
 import sys
+import os
+
+from queue import Queue
 
 import PyQt6
 from PyQt6.QtWidgets import *
@@ -12,10 +15,37 @@ from src.qt.flowlayout import FlowLayout
 from src.qt.widgets.thumbnail import ThumbnailButton
 from src.qt.widgets.preview_widget import PreviewWidget
 
+
+class SimpleThread(QThread):
+    
+    def __init__(self, queue):
+        QThread.__init__(self)
+        self.queue = queue
+    
+    def run(self):
+        while True:
+            try:
+                job = self.queue.get()
+                job[0](*job[1])
+            except RuntimeError:
+                pass
+
 class Zettelkasten(QObject):
 
     def __init__(self):
         super().__init__()
+        self.thumbnail_queue: Queue = Queue()
+        self.thumbnail_threads: list[SimpleThread] = []
+        
+        maxThreads = os.cpu_count()
+
+        print(maxThreads)
+
+        for i in range(maxThreads):
+            thread = SimpleThread(self.thumbnail_queue)
+            thread.setObjectName(f"ThumbnailRenderer_{i}")
+            self.thumbnail_threads.append(thread)
+            thread.start()
 
     def start(self):
         print("Starting...")
@@ -83,7 +113,6 @@ class Zettelkasten(QObject):
             self.lib.save_library()
             self.lib.clear_variables()
             self.selected.clear()
-
             self.preview_panel.update_widget()
         
         return_code = self.lib.open_library(path)
@@ -104,11 +133,23 @@ class Zettelkasten(QObject):
 
         self.thumbnails.clear()
 
+        with self.thumbnail_queue.mutex:
+            self.thumbnail_queue.queue.clear()
+            self.thumbnail_queue.all_tasks_done.notify_all()
+            self.thumbnail_queue.not_full.notify_all()
+
         for idx, i in enumerate(entries):
             thumbnail = ThumbnailButton((150, 150), i, idx)
             layout.addWidget(thumbnail)            
             self.thumbnails.append(thumbnail)
-                        
+
+            self.thumbnail_queue.put(
+                (
+                    thumbnail.renderer.render,
+                    (i[1], i[2], 150)
+                )
+            )
+        
         layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
         sa: QScrollArea = self.MainWindow.scrollArea
         sa.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
