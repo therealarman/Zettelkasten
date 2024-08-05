@@ -1,5 +1,6 @@
 import sys
 import os
+import sqlite3
 
 from queue import Queue
 
@@ -15,6 +16,7 @@ from src.qt.flowlayout import FlowLayout
 from src.qt.widgets.thumbnail import ThumbnailButton
 from src.qt.widgets.preview_widget import PreviewWidget
 
+DATABASE_PATH = 'zettlekasten.db'
 
 class SimpleThread(QThread):
     
@@ -46,6 +48,9 @@ class Zettelkasten(QObject):
             thread.setObjectName(f"ThumbnailRenderer_{i}")
             self.thumbnail_threads.append(thread)
             thread.start()
+        
+        self.settings = QSettings("Zettelkasten")
+        # print(QSettings.fileName(self.settings))
 
     def start(self):
         print("Starting...")
@@ -84,11 +89,50 @@ class Zettelkasten(QObject):
         self.preview_panel = PreviewWidget((280, 280), main_driver=self)
         self.MainWindow.preview_layout.addWidget(self.preview_panel)
 
+        self.conn = self.get_connection()
+        self.lib.conn = self.conn
+
+        cur = self.conn.cursor()
+
+        cur.execute('''
+        CREATE TABLE IF NOT EXISTS libraries (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            path TEXT NOT NULL
+        )
+        ''')
+
+        cur.execute('''
+        CREATE TABLE IF NOT EXISTS files (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            library_id INTEGER,
+            name TEXT NOT NULL,
+            type TEXT NOT NULL,
+            path TEXT NOT NULL,
+            FOREIGN KEY (library_id) REFERENCES libraries (id)
+        )
+        ''')
+
+        self.conn.commit()
+        cur.close()
+
         self.MainWindow.show()
+
+        last_opened_library = self.settings.value("lastOpenedLibrary", "")
+        # if last_opened_library:
+            # self.open_library(last_opened_library)
+            # layout = FlowLayout()
+            # layout.setSpacing(8)
+            # df = self.lib.dataframe
+            # names_list = df.apply(lambda row: [row['Title'], row['Location'], row['Type']], axis=1).tolist()
+            # self.init_thumbnail_grid(names_list, layout)
 
         # sys.exit(app.exec())
         app.exec()
         self.shutdown()
+
+    def get_connection(self):
+        conn = sqlite3.connect(DATABASE_PATH)
+        return conn
 
     def open_file_dialog(self):
         file_dialog = QFileDialog(self.MainWindow)
@@ -125,6 +169,9 @@ class Zettelkasten(QObject):
             print("Creating New Library")
             self.lib.create_library(path)
             self.lib.populate_library()
+            self.lib.query_lib("SELECT * FROM libray libraries WHERE path = ?")
+
+        self.settings.setValue("lastOpenedLibrary", path)
 
     def init_thumbnail_grid(self, entries, layout):
 
@@ -188,6 +235,8 @@ class Zettelkasten(QObject):
         """Save Library on Application Exit"""
         if self.lib.current_dir:
             self.save_library()
+
+        self.conn.close()
 
         QApplication.quit()
 

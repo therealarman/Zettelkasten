@@ -5,6 +5,7 @@ from PyQt6.QtGui import *
 import matplotlib
 import numpy as np
 import pandas as pd
+import sqlite3
 
 def wrap_text(text, width=15, max_lines=4, truncate=True):
     def wrap_word(word, width):
@@ -96,3 +97,10 @@ def new_wrap_text(text: str, FontMetrics: QFontMetrics, MaxLength: int, wrap: bo
             return text
         else:
             return text[:-3] + "..."
+        
+# def db_connect(db_name: str = "database.db"):
+
+#     conn = sqlite3.connect(db_name)
+#     cur = conn.cursor()
+
+#     return conn, cur
