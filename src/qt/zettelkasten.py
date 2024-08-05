@@ -169,7 +169,6 @@ class Zettelkasten(QObject):
             print("Creating New Library")
             self.lib.create_library(path)
             self.lib.populate_library()
-            self.lib.query_lib("SELECT * FROM libray libraries WHERE path = ?")
 
         self.settings.setValue("lastOpenedLibrary", path)
 
